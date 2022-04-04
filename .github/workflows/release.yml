@@ -10,21 +10,51 @@ on:
 
 jobs:
   deploy:
-    name: Deploy
+    name: Deploy for ${{ matrix.targetPlatform }} 🎮
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        targetPlatform:
+          - StandaloneWindows64
+          - StandaloneLinux64
+          - StandaloneOSX
+          - Android
+          - iOS
+          - WebGL
     steps:
       - name: Checkout
         uses: actions/checkout@v2
         with:
           fetch-depth: 0
           lfs: true
-      - name: Build
-        uses: ./.github/workflows/build_targets
+
+      - name: Restore Library Cache
+        uses: actions/cache@v2
+        with:
+          path: Library
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+          
+      - name: Build Targets
+        uses: webbertakken/unity-builder@v2
+        env:
+          UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
+        with:
+          targetPlatform: ${{ matrix.targetPlatform }}
+
+      - name: Generate Artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: Build (${{ matrix.targetPlatform }})
+          path: build/${{ matrix.targetPlatform }}
+      
       - name: Zip Artifacts
         uses: papeloto/action-zip@v1
         with:
           files: build/${{ matrix.targetPlatform }}/
           dest: ${{ matrix.targetPlatform }}.zip
+          
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
