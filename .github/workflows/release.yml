@@ -65,6 +65,7 @@ jobs:
           token: ${{ secrets.GITHUB_TOKEN }}
           
       - name: Deploy WebGL
+        if: ${{ matrix.targetPlatform == 'WebGL' }}
         uses: JamesIves/github-pages-deploy-action@4.1.4
         with:
           branch: gh-pages
