@@ -14,12 +14,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        # As specified in Unity - https://docs.unity3d.com/ScriptReference/BuildTarget.html
         targetPlatform:
           - StandaloneOSX
           - StandaloneWindows64
           - StandaloneLinux64
+          - iOS
           - Android
+          - WebGL
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
