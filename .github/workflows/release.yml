@@ -1,0 +1,33 @@
+name: Deploy
+
+on: 
+  workflow_dispatch: {}
+  push:
+    branches:
+      - master
+      - main
+      - release
+    tags:
+      - 'v*'
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Build
+        uses: ./.github/workflows/build_targets
+      - name: Zip Artifacts
+        uses: papeloto/action-zip@v1
+        with:
+          files: build/${{ matrix.targetPlatform }}/
+          dest: ${{ matrix.targetPlatform }}.zip
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          name: Release ${{ github.ref }}
+          artifacts: '*.zip'
+          bodyFile: release.md
+          allowUpdates: true
+          token: ${{ secrets.GITHUB_TOKEN }}    
+  
