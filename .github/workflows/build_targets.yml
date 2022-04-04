@@ -2,7 +2,10 @@ name: Build Targets
 
 on: 
   workflow_dispatch: {}
-  push: { tags: ['*'] }
+  push:
+    branches:
+      - master
+      - release
 
 env:
   UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
@@ -22,37 +25,27 @@ jobs:
           - Android
           - WebGL
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v2
-
-      - name: Create LFS file list
-        run: git lfs ls-files -l | cut -d' ' -f1 | sort > .lfs-assets-id
-
-      - name: Restore LFS cache
-        uses: actions/cache@v2
-        id: lfs-cache
         with:
-          path: .git/lfs
-          key: ${{ runner.os }}-lfs-${{ hashFiles('.lfs-assets-id') }}
+          fetch-depth: 0
+          lfs: true
 
-      - name: Git LFS Pull
-        run: |
-          git lfs pull
-          git add .
-          git reset --hard
-      - name: Restore Library cache
+      - name: Restore Library Cache
         uses: actions/cache@v2
         with:
           path: Library
-          key: Library-build-${{ matrix.targetPlatform }}
-          restore-keys: |
-            Library-build-
-            Library-
-      - uses: webbertakken/unity-builder@v2
+          key: Library-${{ matrix.targetPlatform }}
+          restore-keys: Library-
+          
+      - name: Build Targets
+        uses: webbertakken/unity-builder@v2
         with:
+          customImage: 'unityci/editor:2021.2.18f1-base-0'
           targetPlatform: ${{ matrix.targetPlatform }}
 
-      - uses: actions/upload-artifact@v2
+      - name: Generate Artifacts
+        uses: actions/upload-artifact@v2
         with:
           name: Build (${{ matrix.targetPlatform }})
           path: build/${{ matrix.targetPlatform }}
