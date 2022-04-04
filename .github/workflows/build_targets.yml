@@ -16,11 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         targetPlatform:
-          - StandaloneOSX
           - StandaloneWindows64
           - StandaloneLinux64
-          - iOS
-          - Android
           - WebGL
     steps:
       - name: Checkout
