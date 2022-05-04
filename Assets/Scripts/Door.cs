@@ -5,7 +5,7 @@ using UnityEngine;
 public class Door : MonoBehaviour
 {
     //the door from this object
-    public GameObject Panel;  // Child of this
+      // Child of this
     public bool isOpened = false;
 
     // this is the movement rate (if movemnt is applied to the door)
@@ -13,12 +13,15 @@ public class Door : MonoBehaviour
     // this is the rotation rate (if rotation is applied to the door)
     public float rotationSpeed = 90;
 
+    private GameObject Panel;
+
     private Quaternion closeRotation;
     private Quaternion openRotation;
 
 
     void Start()
     {
+        Panel = this.transform.Find("Panel").gameObject;
         closeRotation = Panel.transform.localRotation;
         openRotation = closeRotation;
         openRotation.y += 90;
@@ -27,6 +30,15 @@ public class Door : MonoBehaviour
     void Update()
     {
         float currentY = Panel.transform.localEulerAngles.y;
+
+        if(currentY < 15)
+        {
+            Panel.GetComponent<Collider>().enabled = true;
+        } else
+        {
+            Panel.GetComponent<Collider>().enabled = false;
+        }
+
         if (isOpened)
         {
             Panel.transform.localRotation = Quaternion.Euler(0, Mathf.Min(90, currentY + rotationSpeed * Time.deltaTime), 0);
