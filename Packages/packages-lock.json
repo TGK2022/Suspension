@@ -64,7 +64,7 @@
     },
     "com.unity.collections": {
       "version": "1.2.3",
-      "depth": 2,
+      "depth": 1,
       "source": "registry",
       "dependencies": {
         "com.unity.burst": "1.6.4",
@@ -294,15 +294,15 @@
       "url": "https://packages.unity.com"
     },
     "com.unity.transport": {
-      "version": "1.0.0",
-      "depth": 1,
-      "source": "registry",
+      "version": "https://github.com/needle-mirror/com.unity.transport.git",
+      "depth": 0,
+      "source": "git",
       "dependencies": {
         "com.unity.collections": "1.2.3",
         "com.unity.burst": "1.6.4",
         "com.unity.mathematics": "1.2.5"
       },
-      "url": "https://packages.unity.com"
+      "hash": "bee6984ec173496f4769f93d4e316a7d4af8ba02"
     },
     "com.unity.ugui": {
       "version": "1.0.0",
