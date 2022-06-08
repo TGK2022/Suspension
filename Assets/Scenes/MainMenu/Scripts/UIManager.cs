@@ -35,19 +35,28 @@ namespace MainMenu
             };
         }
 
-        public void StartClientTMP(TextMeshProUGUI address)
+        public void StartClient(RectTransform input)
         {
-            StartClient(address.text);
+            StartClient(input.GetChild(0).GetComponent<TMP_InputField>(), input.GetChild(1).GetComponent<TMP_InputField>());
         }
 
-        public void StartClient(string address)
+        private void StartClient(TMP_InputField address, TMP_InputField port)
+        {
+            if (!int.TryParse(port.text, out var portV))
+                portV = defaultPort;
+
+            StartClient(address.text, portV);
+        }
+
+        public void StartClient(string address, int port)
         {
             transport.ConnectAddress = address;
+            transport.ConnectPort = port;
             if (!networkManager.StartClient())
                 throw new System.InvalidProgramException("Failed to start client!");
         }
 
-        public void StartHosting(TextMeshProUGUI port)
+        public void StartHosting(TMP_InputField port)
         {
             if (!int.TryParse(port.text, out var portV))
                 portV = defaultPort;
