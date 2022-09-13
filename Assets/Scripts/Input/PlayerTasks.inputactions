@@ -1,0 +1,34 @@
+{
+    "name": "PlayerTasks",
+    "maps": [
+        {
+            "name": "PlayerTasks",
+            "id": "3410d34e-8ecd-4afb-b9c7-a49f3db7b961",
+            "actions": [
+                {
+                    "name": "StartTask",
+                    "type": "Button",
+                    "id": "7da727d8-1ac3-471a-8ef7-605fcb28f70f",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "e9bad8c3-ba8c-4977-a11c-233422d97149",
+                    "path": "<Keyboard>/e",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": "",
+                    "action": "StartTask",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        }
+    ],
+    "controlSchemes": []
+}
