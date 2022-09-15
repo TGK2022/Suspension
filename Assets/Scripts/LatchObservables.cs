@@ -12,7 +12,12 @@ public static class LatchObservables
             var state = initialValue;
 
             // Whenever latch fires, state is set to true.
-            var latchSubscribtion = latchTrue.Subscribe(_ => state = true);
+            var latchSubscribtion = latchTrue.Subscribe(
+                _ =>
+                {
+                    state = true;
+                }
+            );
 
             // Whenever tick fires, emit the current value and reset state.
             var tickSubscribtion = tick.Subscribe(_ =>

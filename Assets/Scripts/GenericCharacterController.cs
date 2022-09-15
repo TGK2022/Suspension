@@ -29,7 +29,7 @@ public class GenericCharacterController : MonoBehaviour
     [Header("References")]
     [SerializeField] private AbstractCharacterInputController characterInputController;
     private CharacterController _characterController;
-    private Camera _camera;
+    [SerializeField]  private Camera _camera;
 
     [Header("Locomotion Properties")]
     [SerializeField] private float walkSpeed = 5f;
@@ -48,7 +48,6 @@ public class GenericCharacterController : MonoBehaviour
     private void Awake()
     {
         _characterController = GetComponent<CharacterController>();
-        _camera = GetComponentInChildren<Camera>();
 
         _isRunning = new ReactiveProperty<bool>(false);
         _moved = new Subject<Vector3>().AddTo(this);
@@ -82,7 +81,10 @@ public class GenericCharacterController : MonoBehaviour
                                     _characterController.isGrounded == false)
             .Subscribe(i =>
             {
-                var wasGrounded = _characterController.isGrounded;
+                if (!enabled)
+                    return;
+
+                    var wasGrounded = _characterController.isGrounded;
 
                     // Vertical movement:
                     var verticalVelocity = 0f;
@@ -119,7 +121,8 @@ public class GenericCharacterController : MonoBehaviour
 
                     // Apply movement.
                     var motion = characterVelocity * Time.deltaTime;
-                _characterController.Move(motion);
+                    
+                    _characterController.Move(motion);
 
                     // Set ICharacterSignals output signals related to the movement.
                     HandleLocomotionCharacterSignalsIteration(wasGrounded, _characterController.isGrounded);
@@ -178,18 +181,20 @@ public class GenericCharacterController : MonoBehaviour
             .Where(v => v != Vector2.zero)
             .Subscribe(inputLook =>
             {
+
+                if (!enabled)
+                    return;
                     // Translate 2D mouse input into euler angle rotations.
 
                     // Horizontal look with rotation around the vertical axis, where + means clockwise.
-                    var horizontalLook = inputLook.x * Vector3.up * Time.deltaTime;
+                var horizontalLook = inputLook.x * Vector3.up * Time.deltaTime;
                 transform.localRotation *= Quaternion.Euler(horizontalLook);
 
                     // Vertical look with rotation around the horizontal axis, where + means upwards.
-                    var verticalLook = inputLook.y * Vector3.left * Time.deltaTime;
+                var verticalLook = inputLook.y * Vector3.left * Time.deltaTime;
                 var newQ = _camera.transform.localRotation * Quaternion.Euler(verticalLook);
 
-                _camera.transform.localRotation =
-                    RotationTools.ClampRotationAroundXAxis(newQ, -maxViewAngle, -minViewAngle);
+                _camera.transform.localRotation = RotationTools.ClampRotationAroundXAxis(newQ, -maxViewAngle, -minViewAngle);
             }).AddTo(this);
     }
 

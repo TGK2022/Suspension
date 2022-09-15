@@ -39,14 +39,18 @@ public class Door : MonoBehaviour
             Panel.GetComponent<Collider>().enabled = false;
         }
 
-        if (isOpened)
-        {
-            Panel.transform.localRotation = Quaternion.Euler(0, Mathf.Min(90, currentY + rotationSpeed * Time.deltaTime), 0);
-        }
-        else
-        {
-            Panel.transform.localRotation = Quaternion.Euler(0, Mathf.Max(0, currentY - rotationSpeed * Time.deltaTime), 0);
-        }
+        Panel.GetComponent<Collider>().enabled = !isOpened;
+        foreach(var mr in Panel.GetComponentsInChildren<MeshRenderer>())
+            mr.enabled = !isOpened;
+
+        //if (isOpened)
+        //{
+        //    Panel.transform.localRotation = Quaternion.Euler(0, Mathf.Min(90, currentY + rotationSpeed * Time.deltaTime), 0);
+        //}
+        //else
+        //{
+        //    Panel.transform.localRotation = Quaternion.Euler(0, Mathf.Max(0, currentY - rotationSpeed * Time.deltaTime), 0);
+        //}
     }
 
     void OnTriggerEnter(Collider cube)

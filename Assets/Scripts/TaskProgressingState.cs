@@ -3,9 +3,12 @@ using UnityEngine.InputSystem;
 
 public class TaskProgressingState : TaskBaseState
 {
+    private float startTime = 0.0f;
+
     public override void EnterState(TaskStateManager stateManager)
     {
         Debug.Log("Entered Progressing State");
+        startTime = Time.time;
         stateManager.OnTaskProgressing.Invoke();
     }
 
@@ -19,15 +22,16 @@ public class TaskProgressingState : TaskBaseState
             if (selection.CompareTag(stateManager.taskTag))
             {
                 Renderer selectionRenderer = selection.GetComponent<Renderer>();
-                // Should activate when Hold button is performed
-                if (selectionRenderer != null && stateManager._playerStartTaskAction.WasPerformedThisFrame())
-                {
-                    stateManager.SwitchState(stateManager.taskDoneState);
-                }
+                
                 // If player stopped pressing button should return to HoveredState
-                else if (selectionRenderer != null && stateManager._playerStartTaskAction.WasReleasedThisFrame())
+                if (selectionRenderer != null && stateManager._playerStartTaskAction.WasReleasedThisFrame())
                 {
                     stateManager.SwitchState(stateManager.taskHoveredState);
+                }
+                // Should activate when Hold button is performed and time has passed
+                else if (selectionRenderer != null && (Time.time - startTime) > stateManager.timeToFinish)
+                {
+                    stateManager.SwitchState(stateManager.taskDoneState);
                 }
             }
             else

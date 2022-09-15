@@ -12,6 +12,7 @@ public class TaskStateManager : MonoBehaviour
 
     public string taskTag = "Task";
     public float maxDistanceToTask = 1f;
+    public float timeToFinish = 1f;
     public InputActionAsset inputActions = null;
     public InputActionMap _playerTasksActionMap;
     public InputAction _playerStartTaskAction;
